@@ -1,0 +1,3 @@
+pid-file=/tmp/haiip.pid
+username=jic5760@1
+server=hai-ip1.haion.net

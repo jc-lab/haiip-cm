@@ -1,0 +1,74 @@
+name: haiipcm
+summary: haiipcm
+description: |
+  haiip connection manager
+base: core20
+adopt-info: scripts
+
+architectures:
+  - build-on: amd64
+  - build-on: armhf
+  - build-on: arm64
+  - build-on: s390x
+  - build-on: ppc64le
+
+package-repositories:
+  - type: apt
+    #name: default
+    architectures: [amd64, i386]
+    components: [main, multiverse]
+    #main, multiverse, restricted, universe]
+    suites: [focal, focal-updates] # [$SNAPCRAFT_APT_RELEASE, $SNAPCRAFT_APT_RELEASE-updates]
+    key-id: F6ECB3762474EDA9D21B7022871920D1991BC93C
+    url: http://mirror.kakao.com/ubuntu
+
+apps:
+  cm:
+    command: wrappers/cm.sh
+    plugs:
+      - network
+      - network-observe
+  bash:
+    command: wrappers/bash.sh
+    plugs:
+      - network
+      - network-observe
+
+parts:
+  nodejs:
+    plugin: nil
+    source: https://github.com/nvm-sh/nvm.git
+    source-type: git
+    source-tag: v0.37.2
+    build-packages:
+      - bash
+      - git
+      - curl
+    build-environment:
+      - NVM_DIR: "${SNAPCRAFT_PART_BUILD}"
+    override-build: |
+      . ./nvm.sh
+      nvm install 12.20.1
+      mv $NVM_DIR/versions/node/v12.20.1/bin ${SNAPCRAFT_PART_INSTALL}/bin
+      mv $NVM_DIR/versions/node/v12.20.1/lib ${SNAPCRAFT_PART_INSTALL}/lib
+      ls -al ${SNAPCRAFT_PART_INSTALL}/bin/
+  app:
+    after:
+      - nodejs
+    plugin: nil
+    source: ./haiip-cm
+    override-build: |
+      rm -rf dist ${SNAPCRAFT_PART_INSTALL}/app
+      npm install
+      npm run build
+      cp -rf dist ${SNAPCRAFT_PART_INSTALL}/app
+  scripts:
+    plugin: nil
+    source: ./snap-resources
+    build-packages:
+      - git
+    override-build: |
+      version_tag=$(cd $SNAPCRAFT_PROJECT_DIR && git describe --tags | sed -e 's,^v\?\([0-9].\+\),\1,g' || echo 'v0.0.1-develop')
+      snapcraftctl set-version "${version_tag}"
+      cp -rf wrappers ${SNAPCRAFT_PART_INSTALL}/wrappers
+      chmod +x ${SNAPCRAFT_PART_INSTALL}/wrappers/*
