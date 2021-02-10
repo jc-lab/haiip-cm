@@ -12,15 +12,15 @@ architectures:
   - build-on: s390x
   - build-on: ppc64le
 
-package-repositories:
-  - type: apt
-    #name: default
-    architectures: [amd64, i386]
-    components: [main, multiverse]
-    #main, multiverse, restricted, universe]
-    suites: [focal, focal-updates] # [$SNAPCRAFT_APT_RELEASE, $SNAPCRAFT_APT_RELEASE-updates]
-    key-id: F6ECB3762474EDA9D21B7022871920D1991BC93C
-    url: http://mirror.kakao.com/ubuntu
+#package-repositories:
+#  - type: apt
+#    #name: default
+#    architectures: [amd64, i386]
+#    components: [main, multiverse]
+#    #main, multiverse, restricted, universe]
+#    suites: [focal, focal-updates] # [$SNAPCRAFT_APT_RELEASE, $SNAPCRAFT_APT_RELEASE-updates]
+#    key-id: F6ECB3762474EDA9D21B7022871920D1991BC93C
+#    url: http://mirror.kakao.com/ubuntu
 
 apps:
   cm:
