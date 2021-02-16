@@ -12,7 +12,7 @@ OpenVPN 설정 생성 및 연결 후 동작을 지원합니다.
 
 ```bash
 $ sudo apt-get install openvpn
-$ sudo snap install haiipcm --channel=edge
+$ sudo snap install haiipcm
 ```
 
 ## 설정파일 생성 및 수정
